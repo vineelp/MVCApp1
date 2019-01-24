@@ -10,6 +10,7 @@ using MVCApp1.Controllers;
 namespace MVCApp1.Tests.Controllers
 {
     [TestClass]
+    [DeploymentItem("WebGrease.dll")]
     public class HomeControllerTest
     {
         [TestMethod]
