@@ -1,0 +1,68 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@3.9.1">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://github.com/vineelp/MVCApp1</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/master</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.BatchFile>
+      <command>C:\Nuget\nuget.exe restore MVCApp1.sln</command>
+    </hudson.tasks.BatchFile>
+    <hudson.plugins.msbuild.MsBuildBuilder plugin="msbuild@1.29">
+      <msBuildName>MSBuild-VS2015</msBuildName>
+      <msBuildFile>${WORKSPACE}\MVCApp1.sln</msBuildFile>
+      <cmdLineArgs>/t:rebuild /p:VisualStudioVersion=14.0 /p:Configuration=Release /p:DeployOnBuild=True</cmdLineArgs>
+      <buildVariablesAsProperties>false</buildVariablesAsProperties>
+      <continueOnBuildFailure>false</continueOnBuildFailure>
+      <unstableIfWarnings>false</unstableIfWarnings>
+      <doNotUseChcpCommand>false</doNotUseChcpCommand>
+    </hudson.plugins.msbuild.MsBuildBuilder>
+    <hudson.tasks.BatchFile>
+      <command></command>
+    </hudson.tasks.BatchFile>
+    <org.jenkinsci.plugins.MsTestBuilder plugin="mstestrunner@1.3.0">
+      <msTestName>MSTest</msTestName>
+      <testFiles>${WORKSPACE}\MVCApp1.Tests\bin\Debug\MVCApp1.Tests.dll</testFiles>
+      <categories></categories>
+      <resultFile>MVCAppTestResult</resultFile>
+      <cmdLineArgs></cmdLineArgs>
+      <continueOnFail>false</continueOnFail>
+    </org.jenkinsci.plugins.MsTestBuilder>
+    <hudson.tasks.BatchFile>
+      <command>&quot;C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe&quot; -verb=sync -source:package=&quot;C:\Program Files (x86)\Jenkins\workspace\TestJenkins\MVCApp1\obj\Release\Package\MVCApp1.zip&quot; -dest:auto,computerName=https://publish.gear.host:8172/msdeploy.axd?site=vineelp,userName=$vineelp,password=KhaWuoZpqdlwcMmdrgt9F0tdp9EljiwedGvCEtPRuWQefn0Kb4tJNC9Yn2nW,authType=basic -setParam:&quot;IIS Web Application Name&quot;=&quot;vineelp&quot; -allowUntrusted=true</command>
+    </hudson.tasks.BatchFile>
+  </builders>
+  <publishers>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>MVCApp1\obj\Release\Package\MVCApp1.zip</artifacts>
+      <allowEmptyArchive>false</allowEmptyArchive>
+      <onlyIfSuccessful>false</onlyIfSuccessful>
+      <fingerprint>false</fingerprint>
+      <defaultExcludes>true</defaultExcludes>
+      <caseSensitive>true</caseSensitive>
+    </hudson.tasks.ArtifactArchiver>
+  </publishers>
+  <buildWrappers/>
+</project>
